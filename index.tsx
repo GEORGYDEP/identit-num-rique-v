@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { 
-  ChevronRight, Award, Map, RefreshCcw, ShieldCheck, Users, Globe, 
-  CheckCircle2, XCircle, Info, HelpCircle, User, MousePointer2, 
-  ArrowRight, Shield, Trash2, Edit3, Search, Share2, Hand, 
-  ShieldAlert, Lock, Mail, AlertTriangle, Trophy, Zap, Eye
+  ChevronRight, Award, RefreshCcw, ShieldCheck, Users, Globe, 
+  CheckCircle2, XCircle, HelpCircle, User, Search, Trash2, 
+  Edit3, Share2, Hand, ShieldAlert, Lock, Mail, AlertTriangle, 
+  Trophy, Zap, Eye, MousePointer2, Shield
 } from 'lucide-react';
 
-// --- DOMAIN TYPES ---
+// --- TYPES ---
 enum LevelId {
   INTRO = 'intro',
   GROUPS = 'groups',
@@ -18,35 +18,33 @@ enum LevelId {
   CONCLUSION = 'conclusion'
 }
 
-// --- COMPONENTS ---
+// --- COMPOSANTS DE MISSION ---
 
 const IntroScreen = ({ onStart }) => (
-  <div className="flex flex-col items-center text-center py-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-    <div className="glass px-6 py-2 rounded-full border border-orange-500/30 text-orange-400 font-black tracking-widest text-xs uppercase mb-8">
-      Unité Pédagogique : UAA4
+  <div className="flex flex-col items-center text-center py-12 md:py-24 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+    <div className="glass px-6 py-2 rounded-full border border-orange-500/30 text-orange-400 font-black tracking-widest text-xs uppercase mb-10">
+      Unité Pédagogique : UAA4 - Identité Numérique
     </div>
-    <h1 className="text-6xl md:text-8xl font-black mb-8 title-gradient leading-none tracking-tight font-serif italic">
-      L'Odyssée <span className="text-orange-600 not-italic">Numérique</span>
+    <h1 className="text-6xl md:text-9xl font-black mb-10 title-gradient leading-none tracking-tighter font-serif italic">
+      L'Odyssée <br/> <span className="text-orange-600 not-italic">Numérique</span>
     </h1>
-    <p className="text-xl text-slate-400 mb-16 max-w-2xl font-light">
-      Maîtrisez votre image sociale, vos traces et vos droits citoyens dans l'écosystème numérique.
+    <p className="text-xl md:text-2xl text-slate-400 mb-16 max-w-2xl font-light leading-relaxed">
+      Technicien, votre mission est de sécuriser votre double numérique. Maîtrisez vos traces, vos droits et vos appartenances.
     </p>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 w-full max-w-4xl">
-      <div className="glass p-8 rounded-[2rem] border-white/5 flex flex-col items-center">
-        <Users className="w-10 h-10 text-blue-400 mb-4" />
-        <h3 className="font-bold text-white mb-2 uppercase tracking-tighter">Sphères Sociales</h3>
-      </div>
-      <div className="glass p-8 rounded-[2rem] border-white/5 flex flex-col items-center">
-        <Globe className="w-10 h-10 text-purple-400 mb-4" />
-        <h3 className="font-bold text-white mb-2 uppercase tracking-tighter">Double Numérique</h3>
-      </div>
-      <div className="glass p-8 rounded-[2rem] border-white/5 flex flex-col items-center">
-        <ShieldCheck className="w-10 h-10 text-orange-400 mb-4" />
-        <h3 className="font-bold text-white mb-2 uppercase tracking-tighter">Défense RGPD</h3>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 w-full max-w-5xl">
+      {[
+        { icon: Users, label: "Sphères Sociales", color: "text-blue-400" },
+        { icon: Globe, label: "Traces & Échos", color: "text-purple-400" },
+        { icon: ShieldCheck, label: "Défense RGPD", color: "text-orange-400" }
+      ].map((item, i) => (
+        <div key={i} className="glass p-10 rounded-[2.5rem] border-white/5 flex flex-col items-center group hover:border-white/20 transition-all">
+          <item.icon className={`w-12 h-12 ${item.color} mb-6 group-hover:scale-110 transition-transform`} />
+          <h3 className="font-black text-white text-lg uppercase tracking-widest">{item.label}</h3>
+        </div>
+      ))}
     </div>
-    <button onClick={onStart} className="group flex items-center gap-4 bg-orange-600 text-white px-12 py-6 rounded-full font-black text-2xl hover:bg-orange-700 transition-all shadow-[0_0_50px_rgba(234,88,12,0.3)] hover:scale-105">
-      Initialiser la Mission <ChevronRight className="w-8 h-8 group-hover:translate-x-2 transition-transform" />
+    <button onClick={onStart} className="group flex items-center gap-5 bg-orange-600 text-white px-16 py-8 rounded-full font-black text-3xl hover:bg-orange-700 transition-all shadow-[0_0_60px_rgba(234,88,12,0.4)] hover:scale-105 active:scale-95">
+      INITIALISER LA MISSION <ChevronRight className="w-10 h-10 group-hover:translate-x-3 transition-transform" />
     </button>
   </div>
 );
@@ -77,25 +75,24 @@ const GroupsLevel = ({ onComplete }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 animate-in slide-in-from-right-12">
-      <div className="flex justify-between items-end mb-12">
-        <h2 className="text-4xl font-black italic font-serif title-gradient">Sphères Sociales</h2>
-        <div className="text-xl font-mono text-slate-500">{cur + 1} / {ITEMS.length}</div>
-      </div>
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className={`glass p-16 rounded-[3rem] h-80 flex flex-col items-center justify-center text-center relative overflow-hidden transition-all ${feedback === false ? 'animate-shake border-red-500/50 bg-red-500/5' : ''}`}>
+    <div className="max-w-5xl mx-auto py-12 animate-in slide-in-from-right-12">
+      <h2 className="text-5xl font-black italic font-serif title-gradient mb-16 text-center">Mission 1 : Sphères Sociales</h2>
+      <div className="grid md:grid-cols-2 gap-12">
+        <div className={`glass p-16 rounded-[3.5rem] h-96 flex flex-col items-center justify-center text-center relative overflow-hidden transition-all ${feedback === false ? 'animate-shake border-red-500/50 bg-red-500/5' : 'border-white/10'}`}>
           {feedback !== null && (
             <div className={`absolute inset-0 flex items-center justify-center z-10 ${feedback ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
-              {feedback ? <CheckCircle2 className="w-24 h-24 text-emerald-500" /> : <XCircle className="w-24 h-24 text-red-500" />}
+              {feedback ? <CheckCircle2 className="w-32 h-32 text-emerald-500" /> : <XCircle className="w-32 h-32 text-red-500" />}
             </div>
           )}
-          <HelpCircle className="w-12 h-12 text-slate-700 mb-6" />
-          <span className="text-4xl font-black">{ITEMS[cur].text}</span>
+          <HelpCircle className="w-16 h-16 text-slate-700 mb-8" />
+          <span className="text-5xl font-black text-white tracking-tighter">{ITEMS[cur].text}</span>
+          <div className="mt-8 text-slate-500 font-bold uppercase tracking-[0.3em] text-xs">Exemple à classer</div>
         </div>
-        <div className="grid grid-cols-1 gap-3">
+        <div className="flex flex-col gap-4">
           {['agregat', 'statistique', 'primaire', 'secondaire'].map(id => (
-            <button key={id} onClick={() => select(id)} className="glass px-8 py-6 rounded-2xl text-left hover:bg-white/5 border border-white/5 hover:border-orange-500/50 transition-all">
-              <span className="font-black text-xl capitalize">{id}</span>
+            <button key={id} onClick={() => select(id)} className="glass px-10 py-8 rounded-3xl text-left hover:bg-white/5 border border-white/5 hover:border-orange-500/50 transition-all flex justify-between items-center group">
+              <span className="font-black text-2xl capitalize text-slate-300 group-hover:text-white">{id}</span>
+              <ChevronRight className="w-6 h-6 text-slate-700 group-hover:text-orange-500" />
             </button>
           ))}
         </div>
@@ -107,45 +104,49 @@ const GroupsLevel = ({ onComplete }) => {
 const IdentityLevel = ({ onComplete }) => {
   const ELEMENTS = [
     { id: '1', text: "Mon ADN", cat: 'perso' },
-    { id: '2', text: "Mon club de foot", cat: 'coll' },
+    { id: '2', text: "Mon club de scouts", cat: 'coll' },
     { id: '3', text: "Mon style musical", cat: 'perso' },
     { id: '4', text: "Ma nationalité", cat: 'coll' },
     { id: '5', text: "Mon mot de passe", cat: 'perso' },
-    { id: '6', text: "Mon école technique", cat: 'coll' },
+    { id: '6', text: "Mon école (Saint-Luc)", cat: 'coll' },
   ];
   const [cur, setCur] = useState(0);
   const [feedback, setFeedback] = useState(null);
+  const [lastClicked, setLastClicked] = useState(null);
 
   const place = (cat) => {
     if (feedback !== null) return;
+    setLastClicked(cat);
     const ok = ELEMENTS[cur].cat === cat;
     setFeedback(ok);
+    
     setTimeout(() => {
       setFeedback(null);
+      setLastClicked(null);
       if (ok) {
         if (cur < ELEMENTS.length - 1) setCur(c => c + 1);
         else onComplete(100);
       }
-    }, 800);
+    }, 1000);
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 animate-in slide-in-from-bottom-12">
-       <h2 className="text-5xl font-black text-center mb-16 title-gradient font-serif italic">Dualité de l'Être</h2>
-       <div className="flex flex-col items-center gap-12">
-         <div className={`glass p-16 rounded-[3rem] border-2 min-w-[400px] text-center transition-all ${feedback === false ? 'animate-shake border-red-500 bg-red-500/10' : 'border-orange-500/30'}`}>
-            {feedback === true && <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-4" />}
-            {feedback === false && <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />}
-            <span className="text-4xl font-black text-white">{ELEMENTS[cur].text}</span>
+    <div className="max-w-5xl mx-auto py-12 animate-in slide-in-from-bottom-12">
+       <h2 className="text-6xl font-black text-center mb-16 title-gradient font-serif italic">Mission 2 : Ton Portrait Chinois</h2>
+       <div className="flex flex-col items-center gap-16">
+         <div className={`glass p-20 rounded-[4rem] border-2 min-w-[500px] text-center transition-all ${feedback === false ? 'animate-shake border-red-500 bg-red-500/10' : feedback === true ? 'border-emerald-500 bg-emerald-500/10' : 'border-orange-500/30 shadow-[0_0_40px_rgba(234,88,12,0.1)]'}`}>
+            <HelpCircle className="w-16 h-16 text-slate-700 mx-auto mb-8" />
+            <span className="text-5xl font-black text-white block mb-4">{ELEMENTS[cur].text}</span>
+            <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Où ranger cet élément ?</p>
          </div>
-         <div className="grid grid-cols-2 gap-8 w-full">
-            <button onClick={() => place('perso')} className="glass p-12 rounded-[3rem] flex flex-col items-center gap-6 border border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5">
-              <User className="w-12 h-12 text-blue-400" />
-              <span className="font-black text-2xl uppercase tracking-tighter">Identité Personnelle</span>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+            <button onClick={() => place('perso')} className={`glass p-16 rounded-[3.5rem] flex flex-col items-center gap-8 border transition-all ${feedback === false && lastClicked === 'perso' ? 'border-red-500 bg-red-500/10' : 'border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 group'}`}>
+              <User className={`w-16 h-16 ${feedback === false && lastClicked === 'perso' ? 'text-red-500' : 'text-blue-400 group-hover:scale-110'}`} />
+              <span className="font-black text-3xl uppercase tracking-tighter text-white">Identité Personnelle</span>
             </button>
-            <button onClick={() => place('coll')} className="glass p-12 rounded-[3rem] flex flex-col items-center gap-6 border border-white/5 hover:border-orange-500/50 hover:bg-orange-500/5">
-              <Users className="w-12 h-12 text-orange-400" />
-              <span className="font-black text-2xl uppercase tracking-tighter">Identité Collective</span>
+            <button onClick={() => place('coll')} className={`glass p-16 rounded-[3.5rem] flex flex-col items-center gap-8 border transition-all ${feedback === false && lastClicked === 'coll' ? 'border-red-500 bg-red-500/10' : 'border-white/5 hover:border-orange-500/50 hover:bg-orange-500/5 group'}`}>
+              <Users className={`w-16 h-16 ${feedback === false && lastClicked === 'coll' ? 'text-red-500' : 'text-orange-400 group-hover:scale-110'}`} />
+              <span className="font-black text-3xl uppercase tracking-tighter text-white">Identité Collective</span>
             </button>
          </div>
        </div>
@@ -157,7 +158,7 @@ const TracesLevel = ({ onComplete }) => {
   const TRACES = [
     { id: '1', text: "Mon adresse IP", type: 'passif' },
     { id: '2', text: "Poster une story", type: 'actif' },
-    { id: '3', text: "Pixels espions", type: 'passif' },
+    { id: '3', text: "Les cookies publicitaires", type: 'passif' },
     { id: '4', text: "Un ami me tague", type: 'passif' },
   ];
   const [cur, setCur] = useState(0);
@@ -177,24 +178,26 @@ const TracesLevel = ({ onComplete }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 animate-in fade-in">
-      <h2 className="text-5xl font-black italic font-serif title-gradient mb-12">Traces & Échos</h2>
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className={`glass p-16 rounded-[3rem] flex flex-col items-center justify-center text-center relative overflow-hidden ${feedback === false ? 'animate-shake border-red-500' : ''}`}>
+    <div className="max-w-5xl mx-auto py-12 animate-in fade-in">
+      <h2 className="text-6xl font-black italic font-serif title-gradient mb-16 text-center">Mission 3 : Traces & Échos</h2>
+      <div className="grid md:grid-cols-2 gap-12">
+        <div className={`glass p-20 rounded-[4rem] flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[400px] ${feedback === false ? 'animate-shake border-red-500' : 'border-white/10'}`}>
           {feedback !== null && (
             <div className={`absolute inset-0 flex items-center justify-center z-10 ${feedback ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
-              <Eye className={`w-24 h-24 ${feedback ? 'text-emerald-500' : 'text-red-500'}`} />
+              <Eye className={`w-32 h-32 ${feedback ? 'text-emerald-500' : 'text-red-500'}`} />
             </div>
           )}
-          <Globe className="w-12 h-12 text-purple-400 mb-6" />
-          <span className="text-4xl font-black leading-tight">{TRACES[cur].text}</span>
+          <Globe className="w-16 h-16 text-purple-400 mb-8" />
+          <span className="text-5xl font-black text-white leading-tight">{TRACES[cur].text}</span>
         </div>
-        <div className="flex flex-col gap-4">
-          <button onClick={() => select('actif')} className="glass p-10 rounded-[2rem] text-center border border-white/5 hover:border-emerald-500">
-            <span className="text-3xl font-black text-emerald-400">Trace Active</span>
+        <div className="flex flex-col gap-6 justify-center">
+          <button onClick={() => select('actif')} className="glass p-12 rounded-[3rem] text-center border border-white/5 hover:border-emerald-500 group transition-all">
+            <span className="text-4xl font-black text-emerald-400 group-hover:scale-105 block">Trace Active</span>
+            <span className="text-xs text-slate-500 uppercase font-bold mt-2 block tracking-widest">(Volontaire)</span>
           </button>
-          <button onClick={() => select('passif')} className="glass p-10 rounded-[2rem] text-center border border-white/5 hover:border-red-500">
-            <span className="text-3xl font-black text-red-400">Trace Passive</span>
+          <button onClick={() => select('passif')} className="glass p-12 rounded-[3rem] text-center border border-white/5 hover:border-red-500 group transition-all">
+            <span className="text-4xl font-black text-red-400 group-hover:scale-105 block">Trace Passive</span>
+            <span className="text-xs text-slate-500 uppercase font-bold mt-2 block tracking-widest">(Involontaire)</span>
           </button>
         </div>
       </div>
@@ -203,91 +206,198 @@ const TracesLevel = ({ onComplete }) => {
 };
 
 const RgpdLevel = ({ onComplete }) => {
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [completed, setCompleted] = useState([]);
   const RIGHTS = [
-    { id: 'acc', icon: Search, label: "Accès" },
-    { id: 'rec', icon: Edit3, label: "Rectification" },
-    { id: 'eff', icon: Trash2, label: "Effacement" },
-    { id: 'opp', icon: Hand, label: "Opposition" }
+    { id: 'acc', icon: Search, label: "Droit d'Accès", desc: "Demander quelles données une entreprise possède sur moi." },
+    { id: 'rec', icon: Edit3, label: "Rectification", desc: "Faire corriger des infos inexactes ou incomplètes." },
+    { id: 'eff', icon: Trash2, label: "Effacement", desc: "Demander la suppression de mes données (Droit à l'oubli)." },
+    { id: 'por', icon: Share2, label: "Portabilité", desc: "Récupérer mes données dans un format réutilisable." },
+    { id: 'opp', icon: Hand, label: "Opposition", desc: "Refuser que mes données soient utilisées pour du marketing." }
   ];
 
-  const toggle = (id) => {
-    if (!selected.includes(id)) {
-        const next = [...selected, id];
-        setSelected(next);
+  const handleConfirm = (id) => {
+    if (!completed.includes(id)) {
+        const next = [...completed, id];
+        setCompleted(next);
+        setSelected(null);
         if (next.length === RIGHTS.length) setTimeout(() => onComplete(100), 1000);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 animate-in zoom-in">
-       <h2 className="text-5xl font-black italic font-serif title-gradient text-center mb-16">Le Bouclier RGPD</h2>
-       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div className="max-w-6xl mx-auto py-12 animate-in zoom-in">
+       <h2 className="text-6xl font-black italic font-serif title-gradient text-center mb-16">Mission 4 : Le Bouclier RGPD</h2>
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
          {RIGHTS.map(r => (
-           <button key={r.id} onClick={() => toggle(r.id)} className={`glass p-10 rounded-[2.5rem] flex flex-col items-center text-center transition-all ${selected.includes(r.id) ? 'border-orange-500 bg-orange-500/10' : 'border-white/5'}`}>
-              <r.icon className={`w-12 h-12 mb-6 ${selected.includes(r.id) ? 'text-orange-500' : 'text-slate-600'}`} />
-              <span className="text-xl font-black">{r.label}</span>
+           <button 
+             key={r.id} 
+             onClick={() => setSelected(r)} 
+             className={`glass p-10 rounded-[2.5rem] flex flex-col items-center text-center transition-all ${completed.includes(r.id) ? 'border-emerald-500/50 bg-emerald-500/10' : selected?.id === r.id ? 'border-orange-500 bg-orange-500/10 scale-105' : 'border-white/5 hover:border-white/20'}`}
+           >
+              <r.icon className={`w-12 h-12 mb-6 ${completed.includes(r.id) ? 'text-emerald-500' : 'text-slate-600'}`} />
+              <span className="text-lg font-black text-white">{r.label}</span>
+              {completed.includes(r.id) && <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-4" />}
            </button>
          ))}
        </div>
+
+       {selected && (
+         <div className="mt-16 glass p-16 rounded-[3.5rem] border-orange-500/30 animate-in slide-in-from-bottom-8 flex flex-col items-center text-center">
+            <div className="bg-orange-600/20 p-6 rounded-full mb-8">
+                <selected.icon className="w-12 h-12 text-orange-500" />
+            </div>
+            <h3 className="text-4xl font-black text-white mb-6 uppercase tracking-tighter">{selected.label}</h3>
+            <p className="text-2xl text-slate-300 italic mb-10 max-w-2xl font-light">"{selected.desc}"</p>
+            <button 
+                onClick={() => handleConfirm(selected.id)}
+                className="bg-orange-600 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-orange-700 shadow-xl active:scale-95 transition-all"
+            >
+                J'AI COMPRIS !
+            </button>
+         </div>
+       )}
+       
+       {!selected && completed.length < RIGHTS.length && (
+         <p className="text-center mt-12 text-slate-500 font-bold uppercase tracking-widest animate-pulse">
+            Cliquez sur un bouclier pour explorer vos droits
+         </p>
+       )}
     </div>
   );
 };
 
 const SecurityLevel = ({ onComplete }) => {
     const [q, setQ] = useState(0);
+    const [selected, setSelected] = useState(null);
+    const [showExplanation, setShowExplanation] = useState(false);
+    const [score, setScore] = useState(0);
+
     const questions = [
-        { t: "Un mot de passe sûr contient...", o: ["1234", "Mon prénom", "Mélange complexe", "Ma date de naissance"], a: 2 },
-        { t: "Le Phishing est...", o: ["Un sport", "Une arnaque par mail", "Un logiciel", "Une photo"], a: 1 }
+        { 
+            t: "Quel est le mot de passe le plus sûr ?", 
+            o: ["123456", "MonPrenom2008", "J@m2f@F!2025", "belgique"], 
+            a: 2,
+            e: "Un bon mot de passe fait au moins 12 caractères et mélange types de caractères."
+        },
+        { 
+            t: "Un mail dit : 'Compte bloqué, cliquez ici'. C'est...", 
+            o: ["Une urgence réelle", "Du Phishing", "Une mise à jour", "Un cadeau"], 
+            a: 1,
+            e: "Les banques et services officiels ne demandent jamais de cliquer sur des liens critiques par mail."
+        },
+        {
+            t: "La meilleure sécurité actuelle est...",
+            o: ["Changer de pseudo", "La Double Authentification (2FA)", "Mettre son compte en privé", "Supprimer ses cookies"],
+            a: 1,
+            e: "La 2FA ajoute un verrou physique (votre téléphone) en plus du mot de passe."
+        },
+        {
+            t: "Avant de poster une photo, je dois penser à...",
+            o: ["Mes likes", "Ma réputation future", "L'heure de publication", "Mon filtre"],
+            a: 1,
+            e: "Internet n'oublie rien. Ce qui est drôle aujourd'hui peut nuire à votre futur emploi."
+        }
     ];
 
     const handleAnswer = (i) => {
-        if (i === questions[q].a) {
-            if (q < questions.length - 1) setQ(q + 1);
-            else onComplete(100);
+        if (showExplanation) return;
+        setSelected(i);
+        setShowExplanation(true);
+        if (i === questions[q].a) setScore(s => s + 25);
+    };
+
+    const next = () => {
+        if (q < questions.length - 1) {
+            setQ(q + 1);
+            setSelected(null);
+            setShowExplanation(false);
         } else {
-            // Feedback erreur pour la sécurité aussi
-            const btn = document.getElementById(`q-${i}`);
-            btn.classList.add('animate-shake', 'border-red-500');
-            setTimeout(() => btn.classList.remove('animate-shake', 'border-red-500'), 400);
+            onComplete(score);
         }
     };
 
     return (
-        <div className="max-w-3xl mx-auto py-20 glass p-16 rounded-[3rem] border-white/10 animate-in fade-in">
-            <ShieldAlert className="w-12 h-12 text-orange-600 mb-8 mx-auto" />
-            <h2 className="text-4xl font-black text-center mb-12">{questions[q].t}</h2>
-            <div className="grid gap-4">
-                {questions[q].o.map((o, i) => (
-                    <button id={`q-${i}`} key={i} onClick={() => handleAnswer(i)} className="glass py-6 px-8 rounded-2xl text-left font-bold text-xl hover:border-orange-500 transition-all border border-white/5">
-                        {o}
-                    </button>
-                ))}
+        <div className="max-w-4xl mx-auto py-12 animate-in fade-in">
+            <h2 className="text-5xl font-black italic font-serif title-gradient text-center mb-16 italic">Mission 5 : Gardien du Web</h2>
+            <div className="glass p-16 rounded-[4rem] border-white/10 shadow-2xl relative overflow-hidden">
+                <div className="flex items-center gap-4 mb-10">
+                    <ShieldAlert className="w-10 h-10 text-orange-600" />
+                    <span className="text-slate-500 font-bold uppercase tracking-[0.4em] text-xs">Alerte Sécurité {q + 1} / {questions.length}</span>
+                </div>
+                
+                <h3 className="text-4xl font-black text-white mb-12 leading-tight">{questions[q].t}</h3>
+                
+                <div className="grid gap-4 mb-12">
+                    {questions[q].o.map((o, i) => (
+                        <button 
+                            key={i} 
+                            onClick={() => handleAnswer(i)} 
+                            className={`p-8 rounded-3xl text-left font-black text-2xl transition-all border-2 flex justify-between items-center ${
+                                showExplanation 
+                                ? i === questions[q].a ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : selected === i ? 'bg-red-500/20 border-red-500 text-red-400 animate-shake' : 'bg-white/5 border-white/5 opacity-40'
+                                : 'bg-white/5 border-white/5 hover:border-orange-500/50 hover:bg-white/10 text-white'
+                            }`}
+                        >
+                            {o}
+                            {showExplanation && i === questions[q].a && <CheckCircle2 className="w-8 h-8" />}
+                            {showExplanation && selected === i && i !== questions[q].a && <XCircle className="w-8 h-8" />}
+                        </button>
+                    ))}
+                </div>
+
+                {showExplanation && (
+                    <div className="bg-white/5 p-10 rounded-[2.5rem] border border-orange-500/30 animate-in slide-in-from-bottom-4">
+                        <div className="flex gap-6 items-start">
+                            <AlertTriangle className="w-8 h-8 text-orange-500 flex-shrink-0" />
+                            <div>
+                                <p className="text-xl text-slate-300 italic mb-8">"{questions[q].e}"</p>
+                                <button onClick={next} className="bg-orange-600 text-white px-10 py-4 rounded-xl font-black hover:bg-orange-700 transition-all flex items-center gap-2">
+                                    {q === questions.length - 1 ? "VOIR MON BILAN" : "QUESTION SUIVANTE"} <ChevronRight className="w-6 h-6" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
 };
 
 const FinalSummary = ({ score, onRestart }) => (
-  <div className="max-w-4xl mx-auto py-20 text-center animate-in zoom-in duration-1000">
-     <div className="relative inline-block mb-12">
-        <div className="absolute -inset-12 bg-orange-600/30 rounded-full blur-3xl animate-glow"></div>
-        <Trophy className="w-40 h-40 text-orange-500 relative" />
+  <div className="max-w-5xl mx-auto py-20 text-center animate-in zoom-in duration-1000">
+     <div className="relative inline-block mb-16">
+        <div className="absolute -inset-16 bg-orange-600/30 rounded-full blur-[80px] animate-glow"></div>
+        <div className="relative bg-slate-900 border-4 border-orange-500/50 p-10 rounded-full animate-float">
+            <Trophy className="w-40 h-40 text-orange-500" />
+        </div>
      </div>
-     <h2 className="text-8xl font-black mb-6 italic font-serif title-gradient tracking-tighter">Mission Accomplie</h2>
-     <div className="glass p-20 rounded-[4rem] border-white/5 mb-16 shadow-2xl">
-        <span className="text-slate-500 font-bold uppercase tracking-[0.5em] block mb-4">Certificat de Citoyenneté</span>
-        <span className="text-9xl font-black text-white">{score} <span className="text-3xl text-orange-600 font-normal">pts</span></span>
+     <h2 className="text-8xl md:text-9xl font-black mb-8 italic font-serif title-gradient tracking-tighter">Mission Accomplie</h2>
+     <div className="glass p-20 rounded-[4rem] border-white/5 mb-16 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-10 opacity-10">
+            <ShieldCheck className="w-60 h-60 text-white" />
+        </div>
+        <span className="text-slate-500 font-black uppercase tracking-[0.6em] block mb-6 text-sm">Score de Citoyenneté Numérique</span>
+        <span className="text-[12rem] font-black text-white leading-none tracking-tighter">
+            {score} <span className="text-4xl text-orange-600 font-normal ml-[-30px] uppercase tracking-widest">pts</span>
+        </span>
      </div>
-     <div className="flex justify-center gap-8">
-        <button onClick={onRestart} className="flex items-center gap-4 bg-orange-600 text-white px-12 py-6 rounded-full font-black text-2xl shadow-[0_0_50px_rgba(234,88,12,0.3)] hover:scale-105 active:scale-95 transition-all">
-           <RefreshCcw className="w-8 h-8" /> Recommencer l'Aventure
+     <div className="flex flex-col md:flex-row justify-center gap-8">
+        <button onClick={onRestart} className="group flex items-center justify-center gap-4 bg-orange-600 text-white px-16 py-8 rounded-full font-black text-3xl shadow-[0_0_60px_rgba(234,88,12,0.4)] hover:bg-orange-700 transition-all hover:scale-105 active:scale-95">
+           <RefreshCcw className="w-10 h-10 group-hover:rotate-180 transition-transform duration-700" /> 
+           RECOMMENCER L'AVENTURE
+        </button>
+        <button onClick={() => window.print()} className="flex items-center justify-center gap-4 bg-white/5 text-slate-300 px-12 py-8 rounded-full font-black text-2xl border border-white/10 hover:bg-white/10 transition-all">
+           <Share2 className="w-8 h-8" /> CERTIFIER MON SCORE
         </button>
      </div>
+     <footer className="mt-24 text-slate-700 text-[10px] font-black uppercase tracking-[1em]">
+        Ingénierie Pédagogique • Saint-Luc Frameries • 2024-2025
+     </footer>
   </div>
 );
 
-// --- MAIN APP ---
+// --- APP PRINCIPALE ---
 
 const App = () => {
   const [level, setLevel] = useState(LevelId.INTRO);
@@ -308,25 +418,28 @@ const App = () => {
     if (idx < sequence.length - 1) setLevel(sequence[idx + 1]);
   };
 
-  const resetGame = () => {
+  const resetGame = useCallback(() => {
     setLevel(LevelId.INTRO);
     setScore(0);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col p-6 md:p-12">
-      <nav className="glass sticky top-4 z-50 px-10 py-5 rounded-[2rem] flex justify-between items-center max-w-7xl mx-auto w-full border-white/10 mb-12">
-        <div className="flex items-center gap-4">
-          <div className="bg-orange-600 p-2.5 rounded-xl shadow-lg shadow-orange-600/20"><Zap className="text-white w-6 h-6" /></div>
-          <h1 className="text-2xl font-black tracking-tighter uppercase italic text-white">UAA4 Quest</h1>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-2xl border border-white/5">
-            <Award className="text-orange-500 w-6 h-6" />
-            <span className="font-mono font-black text-2xl text-white">{score}</span>
+      <nav className="glass sticky top-6 z-50 px-12 py-6 rounded-[2.5rem] flex justify-between items-center max-w-7xl mx-auto w-full border-white/10 mb-16 shadow-2xl">
+        <div className="flex items-center gap-5">
+          <div className="bg-orange-600 p-3 rounded-2xl shadow-lg shadow-orange-600/30 animate-pulse"><Zap className="text-white w-7 h-7" /></div>
+          <div>
+            <h1 className="text-3xl font-black tracking-tighter uppercase italic text-white leading-none">UAA4 Quest</h1>
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.4em]">Odyssée Technique</span>
           </div>
-          <button onClick={resetGame} className="p-3 glass rounded-full hover:bg-white/10 text-slate-400 transition-all">
-            <RefreshCcw className="w-5 h-5" />
+        </div>
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4 bg-white/5 px-8 py-4 rounded-[1.5rem] border border-white/5 shadow-inner">
+            <Award className="text-orange-500 w-8 h-8" />
+            <span className="font-mono font-black text-3xl text-white">{score}</span>
+          </div>
+          <button onClick={resetGame} className="p-4 glass rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-all transform hover:rotate-180 duration-700">
+            <RefreshCcw className="w-6 h-6" />
           </button>
         </div>
       </nav>
@@ -340,10 +453,6 @@ const App = () => {
         {level === LevelId.SECURITY && <SecurityLevel onComplete={handleNext} />}
         {level === LevelId.CONCLUSION && <FinalSummary score={score} onRestart={resetGame} />}
       </main>
-
-      <footer className="py-12 text-center text-slate-700 text-[10px] font-black uppercase tracking-[1em]">
-        Ingénierie Pédagogique • Saint-Luc Frameries • 2025
-      </footer>
     </div>
   );
 };

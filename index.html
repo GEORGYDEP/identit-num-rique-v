@@ -3,563 +3,1653 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UAA4 Quest | L'Odyssée Numérique</title>
-    
-    <!-- ARCHITECTURE MODULAIRE NATIVE (Import Maps) -->
-    <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.469.0?external=react",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-
-    <!-- COMPILATEURS RUNTIME -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- TYPOGRAPHIE ET DESIGN -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
-    
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Outfit', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
-            },
-            animation: {
-              'mesh': 'mesh 15s ease infinite alternate',
-              'glow': 'glow 4s ease-in-out infinite',
-              'shake': 'shake 0.4s ease-in-out',
-              'float': 'float 6s ease-in-out infinite',
-            },
-            keyframes: {
-              mesh: {
-                '0%': { transform: 'scale(1) translate(0%, 0%)' },
-                '50%': { transform: 'scale(1.1) translate(3%, 3%)' },
-                '100%': { transform: 'scale(1) translate(0%, 0%)' },
-              },
-              glow: {
-                '0%, 100%': { opacity: '0.4', filter: 'blur(20px)' },
-                '50%': { opacity: '0.7', filter: 'blur(40px)' },
-              },
-              shake: {
-                '0%, 100%': { transform: 'translateX(0)' },
-                '25%': { transform: 'translateX(-8px)' },
-                '75%': { transform: 'translateX(8px)' },
-              },
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-15px)' },
-              }
-            }
-          }
-        }
-      }
-    </script>
-
+    <title>🎮 ID Quest - L'Aventure de l'Identité | UAA4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background-color: #030712; 
-            color: #f8fafc; 
+        :root {
+            --terracotta: #E07B53;
+            --terracotta-dark: #C25A35;
+            --olive: #7A9E7E;
+            --olive-dark: #5A7E5E;
+            --gold: #F4C95D;
+            --gold-dark: #D4A93D;
+            --cream: #FFF8F0;
+            --dark: #2D3436;
+            --purple: #9B7EDE;
+            --purple-dark: #7B5EBE;
+            --coral: #FF7675;
+            --teal: #00B894;
+            --shadow: rgba(45, 52, 54, 0.15);
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #FFF8F0 0%, #FFE8D6 50%, #FFDDC1 100%);
+            min-height: 100vh;
             overflow-x: hidden;
-            font-family: 'Outfit', sans-serif;
         }
-        .mesh-bg {
+
+        /* Fond décoratif */
+        .bg-decoration {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(234, 88, 12, 0.05) 0%, transparent 50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
         }
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
         }
-        .title-gradient {
-            background: linear-gradient(to right, #ffffff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        .bg-shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--terracotta);
+            top: -100px;
+            right: -100px;
+            animation: float 20s ease-in-out infinite;
         }
-        @media print { .no-print { display: none; } }
+
+        .bg-shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: var(--olive);
+            bottom: -50px;
+            left: -50px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        .bg-shape:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            background: var(--gold);
+            top: 50%;
+            left: 10%;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, -20px) rotate(5deg); }
+            50% { transform: translate(-10px, 20px) rotate(-5deg); }
+            75% { transform: translate(-20px, -10px) rotate(3deg); }
+        }
+
+        /* Container principal */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--terracotta);
+            text-shadow: 4px 4px 0 var(--gold), 6px 6px 0 var(--shadow);
+            letter-spacing: 4px;
+            animation: logoEntrance 1s ease-out;
+        }
+
+        @keyframes logoEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--dark);
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* Barre de progression globale */
+        .progress-container {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-label {
+            font-weight: 700;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 20px;
+            background: #E8E8E8;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--olive), var(--teal));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .score-display {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--terracotta);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        /* Carte de niveau */
+        .level-card {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 50px var(--shadow);
+            margin-bottom: 20px;
+            animation: cardEntrance 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--terracotta), var(--gold), var(--olive));
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .level-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .level-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .level-badge.level-1 { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark)); }
+        .level-badge.level-2 { background: linear-gradient(135deg, var(--olive), var(--olive-dark)); }
+        .level-badge.level-3 { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); }
+        .level-badge.level-4 { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); }
+        .level-badge.level-5 { background: linear-gradient(135deg, var(--teal), #008B76); }
+        .level-badge.level-6 { background: linear-gradient(135deg, var(--coral), #E55655); }
+
+        .level-info h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--dark);
+            letter-spacing: 1px;
+        }
+
+        .level-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Questions */
+        .question-container {
+            margin-bottom: 25px;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--dark);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .question-context {
+            background: #F8F4F0;
+            border-left: 4px solid var(--gold);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Options de réponse */
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: #F8F8F8;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            padding: 18px 20px;
+            text-align: left;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: white;
+            border-color: var(--olive);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px var(--shadow);
+        }
+
+        .option-btn.selected {
+            background: white;
+            border-color: var(--terracotta);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+            border-color: var(--teal);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(135deg, #F8D7DA, #F5C6CB);
+            border-color: var(--coral);
+            animation: shake 0.5s ease;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Feedback */
+        .feedback {
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+            animation: feedbackSlide 0.4s ease;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+            border-left: 5px solid var(--teal);
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #F8D7DA, #F5C6CB);
+            border-left: 5px solid var(--coral);
+        }
+
+        @keyframes feedbackSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-text {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Boutons */
+        .btn {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark));
+            color: white;
+            box-shadow: 0 5px 20px rgba(224, 123, 83, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(224, 123, 83, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--olive), var(--olive-dark));
+            color: white;
+            box-shadow: 0 5px 20px rgba(122, 158, 126, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(122, 158, 126, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* Écran d'accueil */
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .welcome-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+
+        .level-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .level-preview-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .level-preview-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .level-preview-item .emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .level-preview-item .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        /* Écran de résultats */
+        .results-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .results-icon {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            animation: celebrate 1s ease;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0) rotate(-180deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .results-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .results-score {
+            font-size: 3rem;
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--terracotta);
+            margin: 20px 0;
+        }
+
+        .results-message {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .star {
+            font-size: 3rem;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .star.earned {
+            opacity: 1;
+            animation: starPop 0.5s ease forwards;
+        }
+
+        @keyframes starPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* Drag and Drop pour certaines questions */
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            min-height: 60px;
+            padding: 15px;
+            background: #F0F0F0;
+            border-radius: 15px;
+            border: 2px dashed #CCC;
+        }
+
+        .drag-item {
+            background: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: grab;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px var(--shadow);
+            user-select: none;
+        }
+
+        .drag-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+        }
+
+        .drop-zone {
+            min-height: 80px;
+            padding: 15px;
+            background: white;
+            border: 3px dashed #DDD;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.active {
+            border-color: var(--olive);
+            background: #F0FFF0;
+        }
+
+        .drop-zone-title {
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .drop-zone-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Vrai/Faux spécial */
+        .vf-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .vf-btn {
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .vf-btn.vrai {
+            background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+            color: var(--teal);
+        }
+
+        .vf-btn.vrai:hover {
+            border-color: var(--teal);
+            transform: scale(1.02);
+        }
+
+        .vf-btn.faux {
+            background: linear-gradient(135deg, #F8D7DA, #F5C6CB);
+            color: var(--coral);
+        }
+
+        .vf-btn.faux:hover {
+            border-color: var(--coral);
+            transform: scale(1.02);
+        }
+
+        /* Écran de niveau complété */
+        .level-complete {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .level-complete-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .level-complete-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .level-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--terracotta);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Info box */
+        .info-box {
+            background: linear-gradient(135deg, #E8F4FD, #D1E8FA);
+            border-left: 5px solid #3498DB;
+            padding: 20px;
+            border-radius: 0 15px 15px 0;
+            margin: 20px 0;
+        }
+
+        .info-box-title {
+            font-weight: 700;
+            color: #2980B9;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box-text {
+            color: #34495E;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 2.8rem;
+            }
+
+            .level-card {
+                padding: 20px;
+            }
+
+            .progress-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .progress-label, .score-display {
+                text-align: center;
+            }
+
+            .level-preview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .vf-container {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+
+        /* Animation de confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall 3s ease-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
-    <div class="mesh-bg animate-mesh"></div>
-    <div id="root"></div>
+    <!-- Fond décoratif -->
+    <div class="bg-decoration">
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+    </div>
 
-    <!-- LOGIQUE APPLICATIVE REACT 19 -->
-    <script type="text/babel" data-type="module">
-        import React, { useState, useEffect, useCallback } from 'react';
-        import { createRoot } from 'react-dom/client';
-        import { 
-          ChevronRight, Award, RefreshCcw, ShieldCheck, Users, Globe, 
-          CheckCircle2, XCircle, HelpCircle, User, Search, Trash2, 
-          Edit3, Share2, Hand, ShieldAlert, Lock, Mail, AlertTriangle, 
-          Trophy, Zap, Eye, Shield
-        } from 'lucide-react';
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">🎯 ID QUEST</h1>
+            <p class="subtitle">L'aventure de l'identité sociale et numérique</p>
+        </header>
 
-        // --- TYPES ET CONSTANTES ---
-        const LevelId = {
-          INTRO: 'intro',
-          GROUPS: 'groups',
-          IDENTITY: 'identity',
-          TRACES: 'traces',
-          RGPD: 'rgpd',
-          SECURITY: 'security',
-          CONCLUSION: 'conclusion'
-        };
-
-        // --- COMPOSANTS DE MISSION ---
-
-        const IntroScreen = ({ onStart }) => (
-          <div className="flex flex-col items-center text-center py-12 md:py-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <div className="glass px-6 py-2 rounded-full border border-orange-500/30 text-orange-400 font-black tracking-widest text-xs uppercase mb-10">
-              Unité Pédagogique : UAA4 - Identité Numérique
+        <!-- Barre de progression -->
+        <div class="progress-container" id="progressContainer">
+            <span class="progress-label">Progression</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
             </div>
-            <h1 className="text-6xl md:text-9xl font-black mb-10 title-gradient leading-none tracking-tighter font-serif italic">
-              L'Odyssée <br/> <span className="text-orange-600 not-italic">Numérique</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-400 mb-16 max-w-2xl font-light leading-relaxed">
-              Technicien, votre mission est de sécuriser votre double numérique. Maîtrisez vos traces, vos droits et vos appartenances.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 w-full max-w-5xl">
-              {[
-                { icon: Users, label: "Sphères Sociales", color: "text-blue-400" },
-                { icon: Globe, label: "Traces & Échos", color: "text-purple-400" },
-                { icon: ShieldCheck, label: "Défense RGPD", color: "text-orange-400" }
-              ].map((item, i) => (
-                <div key={i} className="glass p-10 rounded-[2.5rem] border-white/5 flex flex-col items-center group hover:border-white/20 transition-all">
-                  <item.icon className={`w-12 h-12 ${item.color} mb-6 group-hover:scale-110 transition-transform`} />
-                  <h3 className="font-black text-white text-lg uppercase tracking-widest">{item.label}</h3>
-                </div>
-              ))}
-            </div>
-            <button onClick={onStart} className="group flex items-center gap-5 bg-orange-600 text-white px-16 py-8 rounded-full font-black text-3xl hover:bg-orange-700 transition-all shadow-[0_0_60px_rgba(234,88,12,0.4)] hover:scale-105 active:scale-95">
-              INITIALISER LA MISSION <ChevronRight className="w-10 h-10 group-hover:translate-x-3 transition-transform" />
-            </button>
-          </div>
-        );
+            <span class="score-display" id="scoreDisplay">0 pts</span>
+        </div>
 
-        const GroupsLevel = ({ onComplete }) => {
-          const ITEMS = [
-            { id: '1', text: "Ma Famille", type: 'primaire' },
-            { id: '2', text: "Passagers d'un train", type: 'agregat' },
-            { id: '3', text: "Les belges de 18 ans", type: 'statistique' },
-            { id: '4', text: "Cercle d'amis proches", type: 'primaire' },
-            { id: '5', text: "Syndicat étudiant", type: 'secondaire' },
-            { id: '6', text: "Foule dans une manif", type: 'agregat' },
-          ];
-          const [cur, setCur] = useState(0);
-          const [feedback, setFeedback] = useState(null);
-
-          const select = (type) => {
-            if (feedback !== null) return;
-            const ok = ITEMS[cur].type === type;
-            setFeedback(ok);
-            setTimeout(() => {
-              setFeedback(null);
-              if (ok) {
-                if (cur < ITEMS.length - 1) setCur(c => c + 1);
-                else onComplete(100);
-              }
-            }, 800);
-          };
-
-          return (
-            <div className="max-w-5xl mx-auto py-12 animate-in slide-in-from-right-12">
-              <h2 className="text-5xl font-black italic font-serif title-gradient mb-16 text-center">Mission 1 : Sphères Sociales</h2>
-              <div className="grid md:grid-cols-2 gap-12">
-                <div className={`glass p-16 rounded-[3.5rem] h-96 flex flex-col items-center justify-center text-center relative overflow-hidden transition-all ${feedback === false ? 'animate-shake border-red-500/50 bg-red-500/5' : 'border-white/10'}`}>
-                  {feedback !== null && (
-                    <div className={`absolute inset-0 flex items-center justify-center z-10 ${feedback ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
-                      {feedback ? <CheckCircle2 className="w-32 h-32 text-emerald-500" /> : <XCircle className="w-32 h-32 text-red-500" />}
+        <!-- Contenu principal -->
+        <main id="mainContent">
+            <!-- Écran d'accueil -->
+            <div class="level-card" id="welcomeScreen">
+                <div class="welcome-screen">
+                    <div class="welcome-icon">🚀</div>
+                    <h2 class="welcome-title">Bienvenue dans ID Quest !</h2>
+                    <p class="welcome-text">
+                        Pars à l'aventure pour maîtriser les concepts de l'identité sociale et numérique ! 
+                        Traverse 6 niveaux passionnants et deviens un expert de la protection de tes données.
+                    </p>
+                    
+                    <div class="level-preview">
+                        <div class="level-preview-item">
+                            <div class="emoji">👥</div>
+                            <div class="title">Groupes sociaux</div>
+                        </div>
+                        <div class="level-preview-item">
+                            <div class="emoji">🪪</div>
+                            <div class="title">Identité sociale</div>
+                        </div>
+                        <div class="level-preview-item">
+                            <div class="emoji">👣</div>
+                            <div class="title">Traces numériques</div>
+                        </div>
+                        <div class="level-preview-item">
+                            <div class="emoji">🛡️</div>
+                            <div class="title">Règles d'or</div>
+                        </div>
+                        <div class="level-preview-item">
+                            <div class="emoji">⚖️</div>
+                            <div class="title">Tes droits (RGPD)</div>
+                        </div>
+                        <div class="level-preview-item">
+                            <div class="emoji">🎯</div>
+                            <div class="title">Défi final</div>
+                        </div>
                     </div>
-                  )}
-                  <HelpCircle className="w-16 h-16 text-slate-700 mb-8" />
-                  <span className="text-5xl font-black text-white tracking-tighter">{ITEMS[cur].text}</span>
+
+                    <div class="btn-container">
+                        <button class="btn btn-primary" onclick="startGame()">
+                            🎮 Commencer l'aventure
+                        </button>
+                    </div>
                 </div>
-                <div className="flex flex-col gap-4">
-                  {['agregat', 'statistique', 'primaire', 'secondaire'].map(id => (
-                    <button key={id} onClick={() => select(id)} className="glass px-10 py-8 rounded-3xl text-left hover:bg-white/5 border border-white/5 hover:border-orange-500/50 transition-all flex justify-between items-center group">
-                      <span className="font-black text-2xl capitalize text-slate-300 group-hover:text-white">{id}</span>
-                      <ChevronRight className="w-6 h-6 text-slate-700 group-hover:text-orange-500" />
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
-          );
+
+            <!-- Container pour les niveaux -->
+            <div id="levelContainer" class="hidden"></div>
+
+            <!-- Écran de résultats finaux -->
+            <div class="level-card hidden" id="resultsScreen">
+                <div class="results-screen">
+                    <div class="results-icon" id="resultsIcon">🏆</div>
+                    <h2 class="results-title" id="resultsTitle">Félicitations !</h2>
+                    
+                    <div class="stars-container" id="starsContainer">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </div>
+                    
+                    <div class="results-score" id="finalScore">0 / 0</div>
+                    <p class="results-message" id="resultsMessage">
+                        Tu as terminé ID Quest !
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-title">💡 Rappel important</div>
+                        <p class="info-box-text">
+                            N'oublie jamais : sur Internet, rien ne s'efface vraiment. Construis ton identité 
+                            numérique comme tu construirais ta réputation dans la vie réelle !
+                        </p>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" onclick="restartGame()">
+                            🔄 Rejouer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ========== DONNÉES DU JEU ==========
+        const gameData = {
+            levels: [
+                {
+                    id: 1,
+                    title: "Les Groupes Sociaux",
+                    description: "Apprends à distinguer les différents types de groupes",
+                    icon: "👥",
+                    questions: [
+                        {
+                            type: "mcq",
+                            question: "Les passagers qui attendent le bus ensemble forment quel type de groupe ?",
+                            options: [
+                                "Un groupe social primaire",
+                                "Un agrégat",
+                                "Une catégorie statistique",
+                                "Un groupe social secondaire"
+                            ],
+                            correct: 1,
+                            explanation: "Un agrégat est un ensemble de personnes au même endroit sans relations particulières entre elles. Les passagers du bus n'ont pas de liens forts ni durables."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Ta famille proche représente quel type de groupe social ?",
+                            options: [
+                                "Un agrégat",
+                                "Une catégorie statistique",
+                                "Un groupe social secondaire",
+                                "Un groupe social primaire"
+                            ],
+                            correct: 3,
+                            explanation: "Le groupe social primaire se caractérise par des relations directes, intimes et personnelles, avec des liens forts et durables. C'est exactement ce qui définit la famille !"
+                        },
+                        {
+                            type: "mcq",
+                            question: "\"Les 18-25 ans\" ou \"Les Wallons\" sont des exemples de...",
+                            options: [
+                                "Groupe social primaire",
+                                "Catégorie statistique",
+                                "Agrégat",
+                                "Groupe social secondaire"
+                            ],
+                            correct: 1,
+                            explanation: "Une catégorie statistique regroupe des individus selon un critère commun (âge, région...) pour des besoins de recherche ou d'analyse. Il n'y a pas de liens directs entre ces personnes."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Ta classe de l'Institut Saint-Luc est un exemple de...",
+                            options: [
+                                "Agrégat",
+                                "Catégorie statistique",
+                                "Groupe social primaire",
+                                "Groupe social secondaire"
+                            ],
+                            correct: 3,
+                            explanation: "Un groupe social secondaire est un groupe plus large où les relations sont moins personnelles, souvent basées sur un intérêt commun. C'est le cas d'une classe scolaire ou d'un club sportif."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Quelle est la caractéristique principale d'un agrégat ?",
+                            options: [
+                                "Les liens sont forts et durables",
+                                "Les membres partagent un intérêt commun",
+                                "Les liens sont faibles ou inexistants et le groupe est éphémère",
+                                "C'est créé pour des besoins de recherche"
+                            ],
+                            correct: 2,
+                            explanation: "L'agrégat se caractérise par des liens faibles ou inexistants et une durée éphémère. Pense aux spectateurs d'un concert : ils sont ensemble mais ne se connaissent pas vraiment."
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "L'Identité Sociale",
+                    description: "Comprends les composantes de ton identité",
+                    icon: "🪪",
+                    questions: [
+                        {
+                            type: "mcq",
+                            question: "Le numéro de compte bancaire fait partie de...",
+                            options: [
+                                "Ta vie publique/civile",
+                                "Ta vie privée",
+                                "Ton intimité",
+                                "Tes données biométriques"
+                            ],
+                            correct: 1,
+                            explanation: "Le numéro de compte bancaire fait partie de ta vie privée, tout comme ton adresse ou ton âge. Ce sont des données personnelles mais pas intimes."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Tes croyances religieuses et tes opinions politiques font partie de...",
+                            options: [
+                                "Ta vie publique",
+                                "Ta vie privée",
+                                "Ton intimité",
+                                "Ton identité collective"
+                            ],
+                            correct: 2,
+                            explanation: "Tes croyances, opinions, sentiments et état de santé font partie de ton intimité. Ce sont les données les plus personnelles et sensibles."
+                        },
+                        {
+                            type: "mcq",
+                            question: "L'identité sociale est la combinaison de...",
+                            options: [
+                                "L'identité numérique et l'identité réelle",
+                                "L'identité personnelle et l'identité collective",
+                                "L'identité publique et l'identité privée",
+                                "L'identité civile et l'identité intime"
+                            ],
+                            correct: 1,
+                            explanation: "L'identité sociale = identité personnelle + identité collective. Elle fait de toi une personne unique, différente de toutes les autres !"
+                        },
+                        {
+                            type: "mcq",
+                            question: "Tes empreintes digitales font partie de...",
+                            options: [
+                                "Ta vie privée",
+                                "Ton intimité",
+                                "Tes données biométriques",
+                                "Ta vie publique"
+                            ],
+                            correct: 2,
+                            explanation: "Les données biométriques comprennent les caractéristiques physiques mesurables : taille, poids, empreintes digitales, reconnaissance faciale..."
+                        },
+                        {
+                            type: "vf",
+                            question: "Ton appartenance à un club de football fait partie de ton identité collective.",
+                            correct: true,
+                            explanation: "L'identité collective se définit par ton appartenance à des groupes sociaux : loisirs (clubs sportifs), vie scolaire, famille, nationalité..."
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "Les Traces Numériques",
+                    description: "Identifie les traces que tu laisses en ligne",
+                    icon: "👣",
+                    questions: [
+                        {
+                            type: "mcq",
+                            question: "Publier une photo sur Instagram est une trace...",
+                            options: [
+                                "Involontaire électronique",
+                                "Involontaire humaine",
+                                "Volontaire (active)",
+                                "Passive"
+                            ],
+                            correct: 2,
+                            explanation: "Publier une photo est une trace volontaire (active) car c'est toi qui la crées. Tu es responsable de cette publication !"
+                        },
+                        {
+                            type: "mcq",
+                            question: "Un ami qui te tague sur une photo sans te demander laisse une trace...",
+                            options: [
+                                "Volontaire pour toi",
+                                "Involontaire électronique",
+                                "Involontaire humaine",
+                                "Biométrique"
+                            ],
+                            correct: 2,
+                            explanation: "C'est une trace involontaire humaine : quelqu'un d'autre laisse une trace sur toi sans ton consentement. C'est pour ça qu'il faut toujours demander avant de taguer !"
+                        },
+                        {
+                            type: "mcq",
+                            question: "Les cookies sur ton navigateur sont des traces...",
+                            options: [
+                                "Volontaires",
+                                "Involontaires humaines",
+                                "Involontaires électroniques",
+                                "Biométriques"
+                            ],
+                            correct: 2,
+                            explanation: "Les cookies sont des traces involontaires électroniques. Ce sont des petits fichiers qui enregistrent tes préférences et ton historique de navigation."
+                        },
+                        {
+                            type: "vf",
+                            question: "L'adresse IP est un identifiant unique qui permet de savoir quels sites tu visites.",
+                            correct: true,
+                            explanation: "L'adresse IP identifie ton appareil sur Internet. Elle permet de savoir quels sites tu visites, quand et pendant combien de temps."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Pourquoi dit-on que \"rien ne s'efface vraiment sur Internet\" ?",
+                            options: [
+                                "Parce que les ordinateurs ont une mémoire infinie",
+                                "Parce que les traces sont durables et peuvent être retrouvées même après suppression",
+                                "Parce que c'est interdit de supprimer des données",
+                                "Parce que les cookies restent pour toujours"
+                            ],
+                            correct: 1,
+                            explanation: "Les traces numériques sont durables. Même si tu supprimes quelque chose, des copies peuvent exister ailleurs (captures d'écran, archives, serveurs...)."
+                        }
+                    ]
+                },
+                {
+                    id: 4,
+                    title: "Les Règles d'Or",
+                    description: "Maîtrise la sécurité sur les réseaux sociaux",
+                    icon: "🛡️",
+                    questions: [
+                        {
+                            type: "vf",
+                            question: "Tu peux partager ton mot de passe avec ton/ta meilleur(e) ami(e) si tu lui fais confiance.",
+                            correct: false,
+                            explanation: "JAMAIS ! Ne partage jamais tes mots de passe, même avec tes meilleurs amis. Les relations peuvent changer et tes comptes doivent rester sécurisés."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Avant de publier quelque chose, quelle question dois-tu te poser ?",
+                            options: [
+                                "Est-ce que ça va avoir beaucoup de likes ?",
+                                "Est-ce que mes amis vont trouver ça drôle ?",
+                                "Cette publication pourrait-elle me nuire dans 10 ans ?",
+                                "Est-ce que c'est à la mode ?"
+                            ],
+                            correct: 2,
+                            explanation: "Réfléchis toujours aux conséquences à long terme. Tes futurs employeurs, profs ou collègues pourraient voir cette publication un jour !"
+                        },
+                        {
+                            type: "vf",
+                            question: "L'authentification à deux facteurs (2FA) ajoute une couche de sécurité supplémentaire.",
+                            correct: true,
+                            explanation: "Exact ! Le 2FA demande un code envoyé sur ton téléphone en plus de ton mot de passe. Même si quelqu'un vole ton mot de passe, il ne pourra pas accéder à ton compte."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Que faire si un inconnu t'envoie une demande d'ami avec un profil suspect ?",
+                            options: [
+                                "Accepter pour être poli",
+                                "Lui demander qui il est",
+                                "Refuser et ignorer la demande",
+                                "Accepter puis le bloquer plus tard"
+                            ],
+                            correct: 2,
+                            explanation: "N'accepte que les personnes que tu connais vraiment dans la vie réelle. Les faux profils sont très nombreux et peuvent être dangereux."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Un bon mot de passe doit contenir au minimum...",
+                            options: [
+                                "6 caractères avec ton prénom",
+                                "8 caractères simples",
+                                "12 caractères avec majuscules, minuscules, chiffres et caractères spéciaux",
+                                "Ta date de naissance pour t'en souvenir"
+                            ],
+                            correct: 2,
+                            explanation: "Un mot de passe sécurisé doit avoir au moins 12 caractères, avec un mélange de majuscules, minuscules, chiffres et caractères spéciaux. Jamais de données personnelles !"
+                        }
+                    ]
+                },
+                {
+                    id: 5,
+                    title: "Tes Droits - Le RGPD",
+                    description: "Connais tes droits sur tes données personnelles",
+                    icon: "⚖️",
+                    questions: [
+                        {
+                            type: "mcq",
+                            question: "Depuis quand le RGPD protège-t-il tes données en Europe ?",
+                            options: [
+                                "2010",
+                                "2015",
+                                "2018",
+                                "2020"
+                            ],
+                            correct: 2,
+                            explanation: "Le RGPD (Règlement Général sur la Protection des Données) est en vigueur depuis mai 2018. Il te donne des droits importants sur tes données personnelles."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Le \"droit à l'oubli\" te permet de...",
+                            options: [
+                                "Oublier tes mots de passe",
+                                "Demander la suppression de tes données",
+                                "Supprimer les souvenirs des autres",
+                                "Effacer ta mémoire numérique"
+                            ],
+                            correct: 1,
+                            explanation: "Le droit à l'effacement (ou \"droit à l'oubli\") te permet de demander la suppression de tes données dans certains cas. C'est un droit fondamental du RGPD !"
+                        },
+                        {
+                            type: "vf",
+                            question: "En Belgique, tu peux consentir seul au traitement de tes données à partir de 13 ans.",
+                            correct: true,
+                            explanation: "En Belgique, l'âge minimum pour consentir seul au traitement de ses données est fixé à 13 ans. Avant cet âge, l'accord des parents est nécessaire."
+                        },
+                        {
+                            type: "mcq",
+                            question: "En Belgique, quelle autorité peux-tu contacter si tes droits ne sont pas respectés ?",
+                            options: [
+                                "La police fédérale",
+                                "L'Autorité de Protection des Données (APD)",
+                                "Facebook directement",
+                                "Le ministre de la Justice"
+                            ],
+                            correct: 1,
+                            explanation: "L'Autorité de Protection des Données (APD) est l'autorité de contrôle en Belgique. Tu peux y déposer une plainte via contact@apd-gba.be"
+                        },
+                        {
+                            type: "mcq",
+                            question: "Le droit à la portabilité te permet de...",
+                            options: [
+                                "Emporter ton téléphone partout",
+                                "Transférer tes données d'un réseau à un autre",
+                                "Récupérer tes données dans un format réutilisable",
+                                "Porter plainte facilement"
+                            ],
+                            correct: 2,
+                            explanation: "Le droit à la portabilité te permet de récupérer tes données dans un format réutilisable. Pratique si tu veux changer de service !"
+                        }
+                    ]
+                },
+                {
+                    id: 6,
+                    title: "Défi Final",
+                    description: "Analyse des situations réelles",
+                    icon: "🎯",
+                    questions: [
+                        {
+                            type: "mcq",
+                            context: "Lucas, 22 ans, postule pour un stage. Son CV est parfait et l'entretien se passe bien. Mais il reçoit un refus car le recruteur a trouvé sur Instagram des photos de soirées arrosées et des commentaires moqueurs sur son ancien patron.",
+                            question: "Qu'est-ce qui a causé l'échec de Lucas ?",
+                            options: [
+                                "Son CV était mal rédigé",
+                                "Son identité numérique a nui à sa candidature",
+                                "Le recruteur n'avait pas le droit de regarder ses réseaux",
+                                "C'était de la discrimination"
+                            ],
+                            correct: 1,
+                            explanation: "L'identité numérique de Lucas (ses publications en ligne) a affecté sa vie professionnelle. Les recruteurs consultent régulièrement les réseaux sociaux des candidats !"
+                        },
+                        {
+                            type: "mcq",
+                            context: "Emma, 16 ans, crée un groupe TikTok \"Les anti-Mme Dupont\" où elle publie des vidéos moqueuses et des commentaires insultants sur sa professeure. Plusieurs camarades rejoignent le groupe.",
+                            question: "Comment qualifie-t-on le comportement d'Emma ?",
+                            options: [
+                                "Une blague entre amis",
+                                "De la liberté d'expression",
+                                "Du cyberharcèlement, puni par la loi",
+                                "Une critique constructive"
+                            ],
+                            correct: 2,
+                            explanation: "C'est du cyberharcèlement : utilisation de l'identité de quelqu'un pour le ridiculiser publiquement. C'est une atteinte à l'image, de la diffamation, et c'est puni par la loi !"
+                        },
+                        {
+                            type: "mcq",
+                            context: "Tu reçois un email de \"ta banque\" te demandant de cliquer sur un lien pour \"vérifier ton compte\" car il y aurait eu une activité suspecte.",
+                            question: "Quelle est la meilleure réaction ?",
+                            options: [
+                                "Cliquer rapidement pour protéger ton compte",
+                                "Ne pas cliquer et contacter ta banque par un autre moyen pour vérifier",
+                                "Répondre à l'email pour demander plus d'informations",
+                                "Transférer l'email à tes amis pour les prévenir"
+                            ],
+                            correct: 1,
+                            explanation: "C'est probablement du phishing ! Ne clique jamais sur les liens suspects. Contacte ta banque via leurs canaux officiels pour vérifier."
+                        },
+                        {
+                            type: "vf",
+                            context: "Une application gratuite te demande ton numéro national, ta religion et ton numéro de compte bancaire pour t'inscrire.",
+                            question: "C'est normal de donner toutes ces informations pour utiliser une application gratuite.",
+                            correct: false,
+                            explanation: "Non ! Ces données sont beaucoup trop sensibles pour une simple application. C'est une collecte excessive de données. Méfie-toi des applications qui demandent trop d'informations personnelles."
+                        },
+                        {
+                            type: "mcq",
+                            question: "Quelle est la meilleure façon de construire son identité numérique ?",
+                            options: [
+                                "Publier le maximum de contenu pour être populaire",
+                                "Ne jamais utiliser les réseaux sociaux",
+                                "Réfléchir avant chaque publication et protéger ses données personnelles",
+                                "Créer de faux profils pour rester anonyme"
+                            ],
+                            correct: 2,
+                            explanation: "La clé est la réflexion et la protection. Utilise les réseaux sociaux intelligemment, réfléchis avant de publier, et protège tes informations sensibles !"
+                        }
+                    ]
+                }
+            ]
         };
 
-        const IdentityLevel = ({ onComplete }) => {
-          const ELEMENTS = [
-            { id: '1', text: "Mon ADN", cat: 'perso' },
-            { id: '2', text: "Mon club de scouts", cat: 'coll' },
-            { id: '3', text: "Ma photo de profil", cat: 'perso' },
-            { id: '4', text: "Ma nationalité", cat: 'coll' },
-            { id: '5', text: "Mon mot de passe", cat: 'perso' },
-            { id: '6', text: "Mon école (Saint-Luc)", cat: 'coll' },
-          ];
-          const [cur, setCur] = useState(0);
-          const [feedback, setFeedback] = useState(null);
-          const [lastClicked, setLastClicked] = useState(null);
+        // ========== ÉTAT DU JEU ==========
+        let gameState = {
+            currentLevel: 0,
+            currentQuestion: 0,
+            score: 0,
+            totalQuestions: 0,
+            levelScores: [],
+            answered: false
+        };
 
-          const place = (cat) => {
-            if (feedback !== null) return;
-            setLastClicked(cat);
-            const ok = ELEMENTS[cur].cat === cat;
-            setFeedback(ok);
+        // ========== FONCTIONS DU JEU ==========
+        
+        function startGame() {
+            // Calculer le total de questions
+            gameState.totalQuestions = gameData.levels.reduce((sum, level) => sum + level.questions.length, 0);
+            gameState.currentLevel = 0;
+            gameState.currentQuestion = 0;
+            gameState.score = 0;
+            gameState.levelScores = [];
+            gameState.answered = false;
+
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('levelContainer').classList.remove('hidden');
             
-            setTimeout(() => {
-              setFeedback(null);
-              setLastClicked(null);
-              if (ok) {
-                if (cur < ELEMENTS.length - 1) setCur(c => c + 1);
-                else onComplete(100);
-              }
-            }, 1000);
-          };
+            loadLevel();
+            updateProgress();
+        }
 
-          return (
-            <div className="max-w-5xl mx-auto py-12 animate-in slide-in-from-bottom-12">
-               <h2 className="text-6xl font-black text-center mb-16 title-gradient font-serif italic">Mission 2 : Ton Portrait Chinois</h2>
-               <div className="flex flex-col items-center gap-16">
-                 <div className={`glass p-20 rounded-[4rem] border-2 min-w-[500px] text-center transition-all ${feedback === false ? 'animate-shake border-red-500 bg-red-500/10' : feedback === true ? 'border-emerald-500 bg-emerald-500/10' : 'border-orange-500/30 shadow-[0_0_40px_rgba(234,88,12,0.1)]'}`}>
-                    <HelpCircle className="w-16 h-16 text-slate-700 mx-auto mb-8" />
-                    <span className="text-5xl font-black text-white block mb-4">{ELEMENTS[cur].text}</span>
-                    <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Où ranger cet élément ?</p>
-                 </div>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
-                    <button onClick={() => place('perso')} className={`glass p-16 rounded-[3.5rem] flex flex-col items-center gap-8 border transition-all ${feedback === false && lastClicked === 'perso' ? 'border-red-500 bg-red-500/10' : 'border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 group'}`}>
-                      <User className={`w-16 h-16 ${feedback === false && lastClicked === 'perso' ? 'text-red-500' : 'text-blue-400 group-hover:scale-110'}`} />
-                      <span className="font-black text-3xl uppercase tracking-tighter text-white">Identité Personnelle</span>
-                    </button>
-                    <button onClick={() => place('coll')} className={`glass p-16 rounded-[3.5rem] flex flex-col items-center gap-8 border transition-all ${feedback === false && lastClicked === 'coll' ? 'border-red-500 bg-red-500/10' : 'border-white/5 hover:border-orange-500/50 hover:bg-orange-500/5 group'}`}>
-                      <Users className={`w-16 h-16 ${feedback === false && lastClicked === 'coll' ? 'text-red-500' : 'text-orange-400 group-hover:scale-110'}`} />
-                      <span className="font-black text-3xl uppercase tracking-tighter text-white">Identité Collective</span>
-                    </button>
-                 </div>
-               </div>
-            </div>
-          );
-        };
-
-        const TracesLevel = ({ onComplete }) => {
-          const TRACES = [
-            { id: '1', text: "Mon adresse IP", type: 'passif' },
-            { id: '2', text: "Poster une story", type: 'actif' },
-            { id: '3', text: "Pixels espions", type: 'passif' },
-            { id: '4', text: "Un ami me tague", type: 'passif' },
-          ];
-          const [cur, setCur] = useState(0);
-          const [feedback, setFeedback] = useState(null);
-
-          const select = (type) => {
-            if (feedback !== null) return;
-            const ok = TRACES[cur].type === type;
-            setFeedback(ok);
-            setTimeout(() => {
-              setFeedback(null);
-              if (ok) {
-                if (cur < TRACES.length - 1) setCur(c => c + 1);
-                else onComplete(100);
-              }
-            }, 800);
-          };
-
-          return (
-            <div className="max-w-5xl mx-auto py-12 animate-in fade-in">
-              <h2 className="text-6xl font-black italic font-serif title-gradient mb-16 text-center">Mission 3 : Traces & Échos</h2>
-              <div className="grid md:grid-cols-2 gap-12">
-                <div className={`glass p-20 rounded-[4rem] flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[400px] ${feedback === false ? 'animate-shake border-red-500' : 'border-white/10'}`}>
-                  {feedback !== null && (
-                    <div className={`absolute inset-0 flex items-center justify-center z-10 ${feedback ? 'bg-emerald-500/10' : 'bg-red-500/10'}`}>
-                      <Eye className={`w-32 h-32 ${feedback ? 'text-emerald-500' : 'text-red-500'}`} />
+        function loadLevel() {
+            const level = gameData.levels[gameState.currentLevel];
+            const container = document.getElementById('levelContainer');
+            
+            container.innerHTML = `
+                <div class="level-card" id="levelCard">
+                    <div class="level-header">
+                        <div class="level-badge level-${level.id}">${level.icon}</div>
+                        <div class="level-info">
+                            <h2>Niveau ${level.id} : ${level.title}</h2>
+                            <p>${level.description}</p>
+                        </div>
                     </div>
-                  )}
-                  <Globe className="w-16 h-16 text-purple-400 mb-8" />
-                  <span className="text-5xl font-black text-white leading-tight">{TRACES[cur].text}</span>
+                    <div id="questionContent"></div>
+                    <div id="feedbackArea"></div>
+                    <div class="btn-container" id="btnContainer"></div>
                 </div>
-                <div className="flex flex-col gap-6 justify-center">
-                  <button onClick={() => select('actif')} className="glass p-12 rounded-[3rem] text-center border border-white/5 hover:border-emerald-500 group transition-all">
-                    <span className="text-4xl font-black text-emerald-400 group-hover:scale-105 block">Trace Active</span>
-                  </button>
-                  <button onClick={() => select('passif')} className="glass p-12 rounded-[3rem] text-center border border-white/5 hover:border-red-500 group transition-all">
-                    <span className="text-4xl font-black text-red-400 group-hover:scale-105 block">Trace Passive</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        };
+            `;
 
-        const RgpdLevel = ({ onComplete }) => {
-          const [selected, setSelected] = useState(null);
-          const [completed, setCompleted] = useState([]);
-          const RIGHTS = [
-            { id: 'acc', icon: Search, label: "Droit d'Accès", desc: "Demander quelles données une entreprise possède sur moi." },
-            { id: 'rec', icon: Edit3, label: "Rectification", desc: "Faire corriger des informations inexactes ou incomplètes." },
-            { id: 'eff', icon: Trash2, label: "Effacement", desc: "Demander la suppression de mes données (Droit à l'oubli)." },
-            { id: 'por', icon: Share2, label: "Portabilité", desc: "Récupérer mes données dans un format réutilisable." },
-            { id: 'opp', icon: Hand, label: "Opposition", desc: "Refuser que mes données soient utilisées pour du profilage." }
-          ];
+            loadQuestion();
+        }
 
-          const handleConfirm = (id) => {
-            if (!completed.includes(id)) {
-                const next = [...completed, id];
-                setCompleted(next);
-                setSelected(null);
-                if (next.length === RIGHTS.length) setTimeout(() => onComplete(100), 1000);
+        function loadQuestion() {
+            const level = gameData.levels[gameState.currentLevel];
+            const question = level.questions[gameState.currentQuestion];
+            const container = document.getElementById('questionContent');
+            const btnContainer = document.getElementById('btnContainer');
+            
+            gameState.answered = false;
+            document.getElementById('feedbackArea').innerHTML = '';
+
+            let questionHTML = `
+                <div class="question-container">
+                    <span class="question-number">Question ${gameState.currentQuestion + 1}/${level.questions.length}</span>
+            `;
+
+            if (question.context) {
+                questionHTML += `<div class="question-context">📖 ${question.context}</div>`;
             }
-          };
 
-          return (
-            <div className="max-w-6xl mx-auto py-12 animate-in zoom-in">
-               <h2 className="text-6xl font-black italic font-serif title-gradient text-center mb-16 italic">Mission 4 : Le Bouclier RGPD</h2>
-               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-                 {RIGHTS.map(r => (
-                   <button 
-                     key={r.id} 
-                     onClick={() => setSelected(r)} 
-                     className={`glass p-10 rounded-[2.5rem] flex flex-col items-center text-center transition-all ${completed.includes(r.id) ? 'border-emerald-500/50 bg-emerald-500/10' : selected?.id === r.id ? 'border-orange-500 bg-orange-500/10 scale-105' : 'border-white/5 hover:border-white/20'}`}
-                   >
-                      <r.icon className={`w-12 h-12 mb-6 ${completed.includes(r.id) ? 'text-emerald-500' : 'text-slate-600'}`} />
-                      <span className="text-lg font-black text-white">{r.label}</span>
-                      {completed.includes(r.id) && <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-4" />}
-                   </button>
-                 ))}
-               </div>
+            questionHTML += `<p class="question-text">${question.question}</p>`;
 
-               {selected && (
-                 <div className="mt-16 glass p-16 rounded-[3.5rem] border-orange-500/30 animate-in slide-in-from-bottom-8 flex flex-col items-center text-center">
-                    <div className="bg-orange-600/20 p-6 rounded-full mb-8">
-                        <selected.icon className="w-12 h-12 text-orange-500" />
+            if (question.type === 'mcq') {
+                questionHTML += '<div class="options-grid">';
+                question.options.forEach((option, index) => {
+                    questionHTML += `
+                        <button class="option-btn" onclick="selectAnswer(${index})" id="option-${index}">
+                            ${option}
+                        </button>
+                    `;
+                });
+                questionHTML += '</div>';
+            } else if (question.type === 'vf') {
+                questionHTML += `
+                    <div class="vf-container">
+                        <button class="vf-btn vrai" onclick="selectVF(true)">✅ VRAI</button>
+                        <button class="vf-btn faux" onclick="selectVF(false)">❌ FAUX</button>
                     </div>
-                    <h3 className="text-4xl font-black text-white mb-6 uppercase tracking-tighter">{selected.label}</h3>
-                    <p className="text-2xl text-slate-300 italic mb-10 max-w-2xl font-light">"{selected.desc}"</p>
-                    <button 
-                        onClick={() => handleConfirm(selected.id)}
-                        className="bg-orange-600 text-white px-12 py-5 rounded-2xl font-black text-xl hover:bg-orange-700 shadow-xl active:scale-95 transition-all"
-                    >
-                        J'AI COMPRIS !
-                    </button>
-                 </div>
-               )}
-               
-               {!selected && completed.length < RIGHTS.length && (
-                 <p className="text-center mt-12 text-slate-500 font-bold uppercase tracking-widest animate-pulse">
-                    Cliquez sur un bouclier pour explorer vos droits
-                 </p>
-               )}
-            </div>
-          );
-        };
+                `;
+            }
 
-        const SecurityLevel = ({ onComplete }) => {
-            const [q, setQ] = useState(0);
-            const [selected, setSelected] = useState(null);
-            const [showExplanation, setShowExplanation] = useState(false);
-            const [score, setScore] = useState(0);
+            questionHTML += '</div>';
+            container.innerHTML = questionHTML;
+            btnContainer.innerHTML = '';
+        }
 
-            const questions = [
-                { 
-                    t: "Quel est le mot de passe le plus sûr ?", 
-                    o: ["123456", "MonPrenom2008", "J@m2f@F!2025", "belgique"], 
-                    a: 2,
-                    e: "Un bon mot de passe fait au moins 12 caractères et mélange types de caractères."
-                },
-                { 
-                    t: "Un mail dit : 'Compte bloqué, cliquez ici'. C'est...", 
-                    o: ["Une urgence réelle", "Du Phishing", "Une mise à jour", "Un cadeau"], 
-                    a: 1,
-                    e: "Les banques et services officiels ne demandent jamais de cliquer sur des liens critiques par mail."
-                },
-                {
-                    t: "La meilleure sécurité actuelle est...",
-                    o: ["Changer de pseudo", "La Double Authentification (2FA)", "Mettre son compte en privé", "Supprimer ses cookies"],
-                    a: 1,
-                    e: "La 2FA ajoute un verrou physique (votre téléphone) en plus du mot de passe."
-                },
-                {
-                    t: "Avant de poster une photo, je dois penser à...",
-                    o: ["Mes likes", "Ma réputation future", "L'heure de publication", "Mon filtre"],
-                    a: 1,
-                    e: "Internet n'oublie rien. Ce qui est drôle aujourd'hui peut nuire à votre futur emploi."
+        function selectAnswer(index) {
+            if (gameState.answered) return;
+            gameState.answered = true;
+
+            const level = gameData.levels[gameState.currentLevel];
+            const question = level.questions[gameState.currentQuestion];
+            const isCorrect = index === question.correct;
+
+            // Désactiver tous les boutons
+            document.querySelectorAll('.option-btn').forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === question.correct) {
+                    btn.classList.add('correct');
+                } else if (i === index && !isCorrect) {
+                    btn.classList.add('incorrect');
                 }
-            ];
+            });
 
-            const handleAnswer = (i) => {
-                if (showExplanation) return;
-                setSelected(i);
-                setShowExplanation(true);
-                if (i === questions[q].a) setScore(s => s + 25);
-            };
+            showFeedback(isCorrect, question.explanation);
+            
+            if (isCorrect) {
+                gameState.score++;
+            }
 
-            const next = () => {
-                if (q < questions.length - 1) {
-                    setQ(q + 1);
-                    setSelected(null);
-                    setShowExplanation(false);
+            updateProgress();
+            showNextButton();
+        }
+
+        function selectVF(answer) {
+            if (gameState.answered) return;
+            gameState.answered = true;
+
+            const level = gameData.levels[gameState.currentLevel];
+            const question = level.questions[gameState.currentQuestion];
+            const isCorrect = answer === question.correct;
+
+            // Désactiver les boutons
+            document.querySelectorAll('.vf-btn').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.7';
+            });
+
+            showFeedback(isCorrect, question.explanation);
+            
+            if (isCorrect) {
+                gameState.score++;
+            }
+
+            updateProgress();
+            showNextButton();
+        }
+
+        function showFeedback(isCorrect, explanation) {
+            const feedbackArea = document.getElementById('feedbackArea');
+            feedbackArea.innerHTML = `
+                <div class="feedback ${isCorrect ? 'correct' : 'incorrect'} show">
+                    <div class="feedback-title">
+                        ${isCorrect ? '🎉 Bravo !' : '😕 Pas tout à fait...'}
+                    </div>
+                    <p class="feedback-text">${explanation}</p>
+                </div>
+            `;
+        }
+
+        function showNextButton() {
+            const btnContainer = document.getElementById('btnContainer');
+            const level = gameData.levels[gameState.currentLevel];
+            const isLastQuestion = gameState.currentQuestion >= level.questions.length - 1;
+            const isLastLevel = gameState.currentLevel >= gameData.levels.length - 1;
+
+            if (isLastQuestion) {
+                if (isLastLevel) {
+                    btnContainer.innerHTML = `
+                        <button class="btn btn-primary" onclick="showResults()">
+                            🏆 Voir mes résultats
+                        </button>
+                    `;
                 } else {
-                    onComplete(score);
+                    btnContainer.innerHTML = `
+                        <button class="btn btn-secondary" onclick="showLevelComplete()">
+                            📊 Résultats du niveau
+                        </button>
+                    `;
                 }
-            };
+            } else {
+                btnContainer.innerHTML = `
+                    <button class="btn btn-primary" onclick="nextQuestion()">
+                        Suivant →
+                    </button>
+                `;
+            }
+        }
 
-            return (
-                <div className="max-w-4xl mx-auto py-12 animate-in fade-in">
-                    <h2 className="text-5xl font-black italic font-serif title-gradient text-center mb-16 italic">Mission 5 : Gardien du Web</h2>
-                    <div className="glass p-16 rounded-[4rem] border-white/10 shadow-2xl relative overflow-hidden">
-                        <div className="flex items-center gap-4 mb-10">
-                            <ShieldAlert className="w-10 h-10 text-orange-600" />
-                            <span className="text-slate-500 font-bold uppercase tracking-[0.4em] text-xs">Alerte Sécurité {q + 1} / {questions.length}</span>
-                        </div>
-                        
-                        <h3 className="text-4xl font-black text-white mb-12 leading-tight">{questions[q].t}</h3>
-                        
-                        <div className="grid gap-4 mb-12">
-                            {questions[q].o.map((o, i) => (
-                                <button 
-                                    key={i} 
-                                    onClick={() => handleAnswer(i)} 
-                                    className={`p-8 rounded-3xl text-left font-black text-2xl transition-all border-2 flex justify-between items-center ${
-                                        showExplanation 
-                                        ? i === questions[q].a ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : selected === i ? 'bg-red-500/20 border-red-500 text-red-400 animate-shake' : 'bg-white/5 border-white/5 opacity-40'
-                                        : 'bg-white/5 border-white/5 hover:border-orange-500/50 hover:bg-white/10 text-white'
-                                    }`}
-                                >
-                                    {o}
-                                    {showExplanation && i === questions[q].a && <CheckCircle2 className="w-8 h-8" />}
-                                    {showExplanation && selected === i && i !== questions[q].a && <XCircle className="w-8 h-8" />}
-                                </button>
-                            ))}
-                        </div>
+        function nextQuestion() {
+            gameState.currentQuestion++;
+            loadQuestion();
+        }
 
-                        {showExplanation && (
-                            <div className="bg-white/5 p-10 rounded-[2.5rem] border border-orange-500/30 animate-in slide-in-from-bottom-4">
-                                <div className="flex gap-6 items-start">
-                                    <AlertTriangle className="w-8 h-8 text-orange-500 flex-shrink-0" />
-                                    <div>
-                                        <p className="text-xl text-slate-300 italic mb-8">"{questions[q].e}"</p>
-                                        <button onClick={next} className="bg-orange-600 text-white px-10 py-4 rounded-xl font-black hover:bg-orange-700 transition-all flex items-center gap-2">
-                                            {q === questions.length - 1 ? "VOIR MON BILAN" : "QUESTION SUIVANTE"} <ChevronRight className="w-6 h-6" />
-                                        </button>
-                                    </div>
-                                </div>
+        function showLevelComplete() {
+            const level = gameData.levels[gameState.currentLevel];
+            const levelScore = calculateLevelScore();
+            gameState.levelScores.push(levelScore);
+
+            const container = document.getElementById('levelContainer');
+            container.innerHTML = `
+                <div class="level-card">
+                    <div class="level-complete">
+                        <div class="level-complete-icon">🎊</div>
+                        <h2 class="level-complete-title">Niveau ${level.id} terminé !</h2>
+                        
+                        <div class="level-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${levelScore}/${level.questions.length}</div>
+                                <div class="stat-label">Bonnes réponses</div>
                             </div>
-                        )}
+                            <div class="stat-item">
+                                <div class="stat-value">${Math.round((levelScore / level.questions.length) * 100)}%</div>
+                                <div class="stat-label">Réussite</div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-title">💡 À retenir</div>
+                            <p class="info-box-text">${getLevelTip(level.id)}</p>
+                        </div>
+
+                        <div class="btn-container">
+                            <button class="btn btn-primary" onclick="nextLevel()">
+                                🚀 Niveau suivant
+                            </button>
+                        </div>
                     </div>
                 </div>
-            );
-        };
+            `;
+        }
 
-        const FinalSummary = ({ score, onRestart }) => (
-          <div className="max-w-5xl mx-auto py-20 text-center animate-in zoom-in duration-1000">
-             <div className="relative inline-block mb-16">
-                <div className="absolute -inset-16 bg-orange-600/30 rounded-full blur-[80px] animate-glow"></div>
-                <div className="relative bg-slate-900 border-4 border-orange-500/50 p-10 rounded-full animate-float">
-                    <Trophy className="w-40 h-40 text-orange-500" />
-                </div>
-             </div>
-             <h2 className="text-8xl md:text-9xl font-black mb-8 italic font-serif title-gradient tracking-tighter">Mission Accomplie</h2>
-             <div className="glass p-20 rounded-[4rem] border-white/5 mb-16 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-10 opacity-10">
-                    <ShieldCheck className="w-60 h-60 text-white" />
-                </div>
-                <span className="text-slate-500 font-black uppercase tracking-[0.6em] block mb-6 text-sm">Score de Citoyenneté Numérique</span>
-                <span className="text-[12rem] font-black text-white leading-none tracking-tighter">
-                    {score} <span className="text-4xl text-orange-600 font-normal ml-[-30px] uppercase tracking-widest">pts</span>
-                </span>
-             </div>
-             <div className="flex flex-col md:flex-row justify-center gap-8 no-print">
-                <button onClick={onRestart} className="group flex items-center justify-center gap-4 bg-orange-600 text-white px-16 py-8 rounded-full font-black text-3xl shadow-[0_0_60px_rgba(234,88,12,0.4)] hover:bg-orange-700 transition-all hover:scale-105 active:scale-95">
-                   <RefreshCcw className="w-10 h-10 group-hover:rotate-180 transition-transform duration-700" /> 
-                   REINITIALISER LE SYSTEME
-                </button>
-                <button onClick={() => window.print()} className="flex items-center justify-center gap-4 bg-white/5 text-slate-300 px-12 py-8 rounded-full font-black text-2xl border border-white/10 hover:bg-white/10 transition-all">
-                   <Share2 className="w-8 h-8" /> CERTIFIER MON SCORE
-                </button>
-             </div>
-             <footer className="mt-24 text-slate-700 text-[10px] font-black uppercase tracking-[1em]">
-                Ingénierie Pédagogique • Saint-Luc Frameries • 2024-2025
-             </footer>
-          </div>
-        );
+        function calculateLevelScore() {
+            // Calculer le score pour le niveau actuel
+            const level = gameData.levels[gameState.currentLevel];
+            const previousQuestions = gameData.levels
+                .slice(0, gameState.currentLevel)
+                .reduce((sum, l) => sum + l.questions.length, 0);
+            
+            // Score actuel moins le score des niveaux précédents
+            const previousScore = gameState.levelScores.reduce((sum, s, i) => {
+                return sum + s;
+            }, 0);
+            
+            return gameState.score - previousScore;
+        }
 
-        // --- APPLICATION PRINCIPALE ---
+        function getLevelTip(levelId) {
+            const tips = {
+                1: "Les groupes sociaux définissent nos interactions. Famille et amis proches (primaires) vs classe et clubs (secondaires) !",
+                2: "Ton identité sociale = identité personnelle + identité collective. Protège tes données intimes !",
+                3: "Traces volontaires (tes publications) + traces involontaires (cookies, tags). Tout reste sur Internet !",
+                4: "Mot de passe fort, 2FA activé, réfléchir avant de publier : les clés de ta sécurité en ligne !",
+                5: "Le RGPD te donne des droits : accès, rectification, effacement, opposition, portabilité. Utilise-les !",
+                6: "Construis ton identité numérique comme ta réputation réelle. Sois vigilant et responsable !"
+            };
+            return tips[levelId] || "Continue à apprendre et protège ton identité !";
+        }
 
-        const App = () => {
-          const [level, setLevel] = useState(LevelId.INTRO);
-          const [score, setScore] = useState(0);
+        function nextLevel() {
+            gameState.currentLevel++;
+            gameState.currentQuestion = 0;
+            loadLevel();
+        }
 
-          const handleNext = (s) => {
-            setScore(prev => prev + s);
-            const sequence = [
-                LevelId.INTRO, 
-                LevelId.GROUPS, 
-                LevelId.IDENTITY, 
-                LevelId.TRACES, 
-                LevelId.RGPD, 
-                LevelId.SECURITY, 
-                LevelId.CONCLUSION
-            ];
-            const idx = sequence.indexOf(level);
-            if (idx < sequence.length - 1) setLevel(sequence[idx + 1]);
-          };
+        function showResults() {
+            document.getElementById('levelContainer').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
 
-          const resetGame = useCallback(() => {
-            setLevel(LevelId.INTRO);
-            setScore(0);
-          }, []);
+            const percentage = Math.round((gameState.score / gameState.totalQuestions) * 100);
+            
+            // Mettre à jour le score
+            document.getElementById('finalScore').textContent = `${gameState.score} / ${gameState.totalQuestions}`;
+            
+            // Étoiles
+            const starsContainer = document.getElementById('starsContainer');
+            const stars = starsContainer.querySelectorAll('.star');
+            let starsEarned = 0;
+            if (percentage >= 40) starsEarned = 1;
+            if (percentage >= 70) starsEarned = 2;
+            if (percentage >= 90) starsEarned = 3;
 
-          return (
-            <div className="min-h-screen flex flex-col p-6 md:p-12">
-              <nav className="glass sticky top-6 z-50 px-12 py-6 rounded-[2.5rem] flex justify-between items-center max-w-7xl mx-auto w-full border-white/10 mb-16 shadow-2xl no-print">
-                <div className="flex items-center gap-5">
-                  <div className="bg-orange-600 p-3 rounded-2xl shadow-lg shadow-orange-600/30 animate-pulse"><Zap className="text-white w-7 h-7" /></div>
-                  <div>
-                    <h1 className="text-3xl font-black tracking-tighter uppercase italic text-white leading-none">UAA4 Quest</h1>
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.4em]">Odyssée Technique</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-8">
-                  <div className="flex items-center gap-4 bg-white/5 px-8 py-4 rounded-[1.5rem] border border-white/5 shadow-inner">
-                    <Award className="text-orange-500 w-8 h-8" />
-                    <span className="font-mono font-black text-3xl text-white">{score}</span>
-                  </div>
-                  <button onClick={resetGame} className="p-4 glass rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-all transform hover:rotate-180 duration-700">
-                    <RefreshCcw className="w-6 h-6" />
-                  </button>
-                </div>
-              </nav>
+            stars.forEach((star, index) => {
+                setTimeout(() => {
+                    if (index < starsEarned) {
+                        star.classList.add('earned');
+                    }
+                }, (index + 1) * 300);
+            });
 
-              <main className="flex-grow container mx-auto">
-                {level === LevelId.INTRO && <IntroScreen onStart={() => handleNext(0)} />}
-                {level === LevelId.GROUPS && <GroupsLevel onComplete={handleNext} />}
-                {level === LevelId.IDENTITY && <IdentityLevel onComplete={handleNext} />}
-                {level === LevelId.TRACES && <TracesLevel onComplete={handleNext} />}
-                {level === LevelId.RGPD && <RgpdLevel onComplete={handleNext} />}
-                {level === LevelId.SECURITY && <SecurityLevel onComplete={handleNext} />}
-                {level === LevelId.CONCLUSION && <FinalSummary score={score} onRestart={resetGame} />}
-              </main>
-            </div>
-          );
-        };
+            // Message et icône personnalisés
+            let icon, title, message;
+            if (percentage >= 90) {
+                icon = '🏆';
+                title = 'Extraordinaire !';
+                message = 'Tu maîtrises parfaitement l\'identité sociale et numérique ! Tu es prêt(e) à protéger tes données comme un pro !';
+                createConfetti();
+            } else if (percentage >= 70) {
+                icon = '🌟';
+                title = 'Excellent !';
+                message = 'Tu as très bien compris les concepts ! Revois peut-être quelques points pour atteindre la perfection.';
+            } else if (percentage >= 50) {
+                icon = '👍';
+                title = 'Bien joué !';
+                message = 'Tu as acquis les bases ! N\'hésite pas à rejouer pour renforcer tes connaissances.';
+            } else {
+                icon = '💪';
+                title = 'Continue tes efforts !';
+                message = 'Chaque erreur est une opportunité d\'apprendre. Rejoue pour mieux maîtriser ces concepts importants !';
+            }
 
-        const rootElement = document.getElementById('root');
-        if (rootElement) {
-          const root = createRoot(rootElement);
-          root.render(<App />);
+            document.getElementById('resultsIcon').textContent = icon;
+            document.getElementById('resultsTitle').textContent = title;
+            document.getElementById('resultsMessage').textContent = message;
+        }
+
+        function restartGame() {
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('scoreDisplay').textContent = '0 pts';
+        }
+
+        function updateProgress() {
+            const questionsAnswered = gameData.levels
+                .slice(0, gameState.currentLevel)
+                .reduce((sum, level) => sum + level.questions.length, 0) 
+                + (gameState.answered ? gameState.currentQuestion + 1 : gameState.currentQuestion);
+            
+            const percentage = (questionsAnswered / gameState.totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('scoreDisplay').textContent = `${gameState.score} pts`;
+        }
+
+        function createConfetti() {
+            const colors = ['#E07B53', '#7A9E7E', '#F4C95D', '#9B7EDE', '#FF7675', '#00B894'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 50);
+            }
         }
     </script>
 </body>
